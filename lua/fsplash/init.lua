@@ -30,6 +30,7 @@ M.open_window = function()
 
 	if(buffer == nil) then
 		buffer = vim.api.nvim_create_buf(false, true);
+		vim.api.nvim_buf_set_option(buffer, 'modifiable', true)
 		vim.api.nvim_buf_set_lines(buffer, 0, -1, false, options.text);
 		vim.api.nvim_buf_set_option(buffer, 'modifiable', false)
 	end
