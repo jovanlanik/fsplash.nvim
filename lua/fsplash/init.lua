@@ -1,9 +1,11 @@
-local M = { }
-local options = {}
-local basename = 'fsplash'
-local window = nil
-local buffer = nil
-local namespace = nil
+local pkg_name = 'fsplash'
+local M = {}
+
+M.opt = {}
+M.window = nil
+M.buffer = nil
+M.namespace = nil
+
 local default = {
 	text = {
 		' _  ___   _____ __  __ ';
@@ -16,63 +18,64 @@ local default = {
 		'CursorMoved';
 		'TextChanged';
 		'VimResized';
-		'WinScrolled'
+		'WinScrolled';
 	};
 	highlights = {
 		['NormalFloat'] = {};
 	};
-	winblend = 0;
 	border = 'solid';
+	winblend = 0;
 }
 
 M.open_window = function()
-	if(window ~= nil) then return end
+	if(M.window ~= nil) then return end
 
-	if(buffer == nil) then
-		buffer = vim.api.nvim_create_buf(false, true);
-		vim.api.nvim_buf_set_option(buffer, 'modifiable', true)
-		vim.api.nvim_buf_set_lines(buffer, 0, -1, false, options.text);
-		vim.api.nvim_buf_set_option(buffer, 'modifiable', false)
+	if(M.buffer == nil) then
+		M.buffer = vim.api.nvim_create_buf(false, true);
+		vim.api.nvim_buf_set_option(M.buffer, 'modifiable', true)
+		vim.api.nvim_buf_set_lines(M.buffer, 0, -1, false, M.opt.text);
+		vim.api.nvim_buf_set_option(M.buffer, 'modifiable', false)
 	end
 
-	if(namespace == nil) then
-		namespace = vim.api.nvim_create_namespace(basename);
-		for name, val in pairs(options.highlights) do
-			vim.api.nvim_set_hl(namespace, name, val)
+	if(M.namespace == nil) then
+		M.namespace = vim.api.nvim_create_namespace(pkg_name);
+		for name, val in pairs(M.opt.highlights) do
+			vim.api.nvim_set_hl(M.namespace, name, val)
 		end
 	end
 
 	local win_config = {
 		relative = 'editor';
-		width = options.width or #options.text[1];
-		height = options.height or  #options.text;
-		row = vim.o.lines / 2 - #options.text / 2;
-		col = vim.o.columns / 2 - #options.text[1] / 2;
+		width = M.opt.width or #M.opt.text[1];
+		height = M.opt.height or  #M.opt.text;
+		row = vim.o.lines / 2 - #M.opt.text / 2;
+		col = vim.o.columns / 2 - #M.opt.text[1] / 2;
 		focusable = false;
-		style = options.style or 'minimal';
-		border = options.border or 'none';
+		style = 'minimal';
+		border = M.opt.border;
 		noautocmd = true;
 	}
 
-	window = vim.api.nvim_open_win(buffer, false, win_config);
-	vim.api.nvim_win_set_hl_ns(window, namespace)
+	M.window = vim.api.nvim_open_win(M.buffer, false, win_config);
+	vim.api.nvim_win_set_hl_ns(M.window, M.namespace)
 
-	local opts = { group = basename, callback = M.close_window }
-	vim.api.nvim_create_augroup(basename, {})
-	vim.api.nvim_create_autocmd(options.autocmds, opts)
+	local opts = { group = pkg_name, callback = M.close_window }
+	vim.api.nvim_create_augroup(pkg_name, {})
+	vim.api.nvim_create_autocmd(M.opt.autocmds, opts)
 
-	vim.wo[window].winblend = options.winblend
+	vim.wo[M.window].winblend = M.opt.winblend
 end
 
 M.close_window = function()
-	vim.api.nvim_clear_autocmds({ group = basename })
-	vim.api.nvim_win_close(window, false)
-	vim.api.nvim_buf_delete(buffer, {})
-	window = nil
+	vim.api.nvim_clear_autocmds({ group = pkg_name })
+	vim.api.nvim_win_close(M.window, false)
+	vim.api.nvim_buf_delete(M.buffer, {})
+	M.window = nil
+	M.buffer = nil
 end
 
 M.setup = function(opts)
-	options = vim.tbl_extend('force', default, opts or {})
+	M.opt = vim.tbl_extend('force', default, opts or {})
 end
 
 return M
