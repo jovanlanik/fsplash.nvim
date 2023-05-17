@@ -7,7 +7,7 @@ M.buffer = nil
 M.namespace = nil
 
 local default = {
-	text = {
+	lines = {
 		' _  ___   _____ __  __ ';
 		'| \\| \\ \\ / /_ _|  \\/  |';
 		'| .` |\\ V / | || |\\/| |';
@@ -33,7 +33,7 @@ M.open_window = function()
 	if(M.buffer == nil) then
 		M.buffer = vim.api.nvim_create_buf(false, true);
 		vim.api.nvim_buf_set_option(M.buffer, 'modifiable', true)
-		vim.api.nvim_buf_set_lines(M.buffer, 0, -1, false, M.opt.text);
+		vim.api.nvim_buf_set_lines(M.buffer, 0, -1, false, M.opt.lines);
 		vim.api.nvim_buf_set_option(M.buffer, 'modifiable', false)
 	end
 
@@ -46,10 +46,10 @@ M.open_window = function()
 
 	local win_config = {
 		relative = 'editor';
-		width = M.opt.width or #M.opt.text[1];
-		height = M.opt.height or  #M.opt.text;
-		row = vim.o.lines / 2 - #M.opt.text / 2;
-		col = vim.o.columns / 2 - #M.opt.text[1] / 2;
+		width = M.opt.width or #M.opt.lines[1];
+		height = M.opt.height or  #M.opt.lines;
+		row = vim.o.lines / 2 - #M.opt.lines / 2;
+		col = vim.o.columns / 2 - #M.opt.lines[1] / 2;
 		focusable = false;
 		style = 'minimal';
 		border = M.opt.border;
