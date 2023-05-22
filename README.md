@@ -15,7 +15,7 @@ require('fsplash').setup()
 ## Configure
 The setup function accepts the following options:
 ```lua
-require('fsplash').setup(
+require('fsplash').setup({
     -- lines of text containing the splash
 	lines = {
 		' _  ___   _____ __  __ ';
