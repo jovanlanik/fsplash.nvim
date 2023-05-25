@@ -1,19 +1,28 @@
 # fsplash.nvim (floating splash screen)
+
 Show a custom splash screen in a floating window.
 
 ![screenshot](https://github.com/jovanlanik/fsplash.nvim/assets/21199271/2e732304-83f5-4217-a4aa-a9e59d82b420)
+
 ## Install
+
 First install using your favorite package manager:
+
 - packer.nvim: `use 'jovanlanik/fsplash'`
 - paq-nvim: `'jovanlanik/fsplash'`
 - lazy.nvim: `'jovanlanik/fsplash'`
 - vim-plug: `Plug 'jovanlanik'`
+
 Then setup fsplash in your config:
+
 ```lua
 require('fsplash').setup()
 ```
+
 ## Configure
+
 The setup function accepts the following options:
+
 ```lua
 require('fsplash').setup({
     -- lines of text containing the splash
@@ -42,5 +51,22 @@ require('fsplash').setup({
 	border = 'solid';
     -- winblend option
 	winblend = 0;
+})
+```
+
+## Third-party Integrations
+
+### resession.nvim
+
+fsplash has built-in support for playing nicely with
+[resession.nvim](https://github.com/stevearc/resession.nvim) session manager
+which simply makes sure the fsplash window is closed before saving/loading a
+session. You can enable the extension when you set up resession.nvim:
+
+```lua
+require('resession').setup({
+    extensions = {
+        fsplash = {}
+    }
 })
 ```
